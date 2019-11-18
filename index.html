@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Tic Tac Toe </title>
+    <link rel="stylesheet" href="style.css" />
+    <!-- <script type="text/javascript" src="vue.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+
+    <script src="js/Square.js"></script>
+    <script src="js/Game.js"></script>
+  </head>
+  <body>
+    <div id="game">
+      <div id="game-info">
+        {{infoMessage}}
+      </div>
+      <div id="game-info">
+        {{timer}}
+      </div>
+      <div id="game-squares">
+        <div
+          class="game-square"
+          v-for="(item, index) in squares"
+          :class="{highlighted: item.isHighlighted}"
+          @click="make(index)"
+        >
+          {{ item.value }}
+        </div>
+      </div>
+    </div>
+  </body>
+
+<script type="text/javascript">
+  let activeGame = new Game();
+
+  let gameVue = new Vue({
+    el: "#game",
+    data: activeGame,
+    methods: {
+      make(index){
+        activeGame.makeMove(index);
+      }
+    },
+    watch: {
+      timer(v){
+        
+      }
+    },
+    computed: {
+      infoMessage(){
+        if(this.inProgress){
+          return `It is ${this.currentTurn}'s turn!`;
+        }
+        if(this.winner){
+          return `${this.winner} wins!`;
+        }
+        if(!this.winner&&!this.inProgress){
+          return 'It was a draw!';
+        }
+      }
+    }
+  });
+
+  
+</script>
+</html>
