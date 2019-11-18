@@ -1,56 +1,80 @@
-#game {
-  width: 500px;
-  margin: 0 auto;
-  border: 1px solid blue;
-}
-
-#game-info {
-  padding: 15px;
-  font-size: 20px;
-  font-family: sans-serif;
-  font-weight: bold;
-  text-align: center;
-  background;: #eee000;
-}
-
-#game-squares {
-  height: 500px;
-  display: flex;
-  flex-wrap: wrap;
-  padding: 25px;
+* {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-.game-square {
-  width: 33.33%;
-  height: 33.33%;
+body {
+  background: #282828;
+  justify-content: center;
+}
 
+.game-box-container {
+  display: grid;
+  justify-content: center;
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(3, 100px);
+}
+
+.game-box {
+  display: grid;
+  border: 1px solid black;
+  align-items: center;
+  justify-items: center;
+}
+
+.X:after {
+  font-size: 50px;
+  color: #24cccd;
+  content: "X";
+}
+
+.O:after {
+  font-size: 50px;
+  content: "0";
+  color: #6ed248;
+}
+
+.game-info {
   display: flex;
   justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
+  margin: 5rem auto;
+  color: #cc9543;
+  font-size: 20px;
+}
 
-  font-family: cursive;
-  font-size: 75px;
-  text-transform: uppercase;
+.title {
+  display: flex;
+  justify-content: center;
+  margin: 1rem auto;
+  color: #cc9543;
+  font-size: 3rem;
+}
 
-  border-radius: 15px;
+.new-game {
+  display: flex;
+  justify-content: center;
+}
+
+#new-game-btn {
+  margin: 5rem auto;
+  font-size: 16px;
+  padding: 4px 8px;
+  height: 2rem;
+  background: #282828;
+  color: #f4b932;
+  border: 1px solid black;
   cursor: pointer;
-  user-select: none;
-  -moz-user-select: none;
+  margin-left: 1rem;
+  margin-right: 1rem;
 }
 
-.game-square.highlighted {
-  color: green;
+input {
+  background-color: #fff !important;
 }
 
-.game-square:hover {
-  background-color: #eee;
-}
-.game-square:nth-child(-n + 6) {
-  border-bottom: 15px solid brown;
-}
-.game-square:nth-child(3n + 1),
-.game-square:nth-child(3n + 2) {
-  border-right: 15px solid brown;
+#new-game-btn:hover {
+  background: dimgrey;
+  color: #f38a45;
 }

@@ -4,66 +4,103 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Tic Tac Toe </title>
+    <title>Tic Tac Toe</title>
     <link rel="stylesheet" href="style.css" />
     <!-- <script type="text/javascript" src="vue.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
-
     <script src="js/Square.js"></script>
     <script src="js/Game.js"></script>
   </head>
   <body>
     <div id="game">
-      <div id="game-info">
-        {{infoMessage}}
-      </div>
-      <div id="game-info">
-        {{timer}}
-      </div>
-      <div id="game-squares">
-        <div
-          class="game-square"
-          v-for="(item, index) in squares"
-          :class="{highlighted: item.isHighlighted}"
-          @click="make(index)"
-        >
-          {{ item.value }}
+      <div class="title">Tic-Tac-Toe</div>
+      <div class="new-game">
+        <input type="text" id="new-game-btn" v-model.number="activeGame.wh" />
+        <button @click="makePossibilities" id="new-game-btn">Submit</button>
+        <button id="new-game-btn" @click="makePossibilities">New Game</button>
+        <div class="game-info" v-if="activeGame.timer">
+          Timer: {{activeGame.timer}}
         </div>
+        <div class="game-info" v-if="infoMessage">{{infoMessage}}</div>
+      </div>
+
+      <div
+        class="game-box-container"
+        :style="{
+          'grid-template-columns': `repeat(${whValue}, 100px)`, 
+          'grid-template-rows': `repeat(${whValue}, 100px)`
+        }"
+      >
+        <div
+          :class="`game-box  ${index} ${item.value ? item.value.toUpperCase() : ''}`"
+          v-for="(item, index) in activeGame.squares"
+          @click="make(index)"
+        ></div>
       </div>
     </div>
   </body>
 
-<script type="text/javascript">
-  let activeGame = new Game();
+  <script type="text/javascript">
+    let activeGame = new Game();
 
-  let gameVue = new Vue({
-    el: "#game",
-    data: activeGame,
-    methods: {
-      make(index){
-        activeGame.makeMove(index);
-      }
-    },
-    watch: {
-      timer(v){
-        
-      }
-    },
-    computed: {
-      infoMessage(){
-        if(this.inProgress){
-          return `It is ${this.currentTurn}'s turn!`;
+    let gameVue = new Vue({
+      el: "#game",
+      data: {
+        activeGame,
+        whValue: ""
+      },
+      watch: {
+        inProgress(value) {
+          if (!value) {
+            this.makePossibilities();
+          }
         }
-        if(this.winner){
-          return `${this.winner} wins!`;
+      },
+      mounted() {
+        this.makePossibilities();
+      },
+      methods: {
+        make(index) {
+          activeGame.makeMove(index);
+        },
+        getClass(item) {
+          return item.isHighlighted ? `selected' ${item.value}` : "";
+        },
+        makePossibilities() {
+          if (this.activeGame.wh) {
+            activeGame.restart();
+            this.activeGame.inProgress = true;
+            this.activeGame.possibilities = activeGame.makePossibilities(
+              Number(this.activeGame.wh)
+            );
+            // console.log(activeGame.makeSquares(Number(this.activeGame.wh)));
+            // console.log(Number(this.activeGame.wh));
+            this.activeGame.squares = activeGame.makeSquares(
+              Number(this.activeGame.wh) * Number(this.activeGame.wh)
+            );
+            this.whValue = this.activeGame.wh;
+          } else {
+            alert("please Input wh");
+          }
         }
-        if(!this.winner&&!this.inProgress){
-          return 'It was a draw!';
+      },
+      computed: {
+        inProgress() {
+          return this.activeGame.inProgress;
+        },
+        infoMessage() {
+          if (this.activeGame.inProgress) {
+            return `It is ${this.activeGame.currentTurn}'s turn!`;
+          }
+          if (this.activeGame.winner) {
+            return `${this.activeGame.winner} wins!`;
+          }
+          if (!this.activeGame.winner && !this.activeGame.inProgress) {
+            return "It was a draw!";
+          }
+          return "";
         }
       }
-    }
-  });
-
-  
-</script>
+    });
+  </script>
 </html>
