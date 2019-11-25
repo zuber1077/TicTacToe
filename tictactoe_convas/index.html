@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head lang="en">
+    <meta charset="UTF-8" />
+    <title></title>
+    <link rel="stylesheet" href="./style.css">
+    <!-- <script type="text/javascript" src="../vue.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+    <script src="js/Game.js"></script>
+  </head>
+  <body>
+    <canvas id="canvas">
+      Your browser does not support canvas, please upgrade to the latest browser
+    </canvas>
+    <div id="box">
+      <div
+        v-if="activeGame.timer && activeGame.isWin === false && activeGame.moveMade > 0 && !activeGame.hideTimer"
+      >
+        <span :style="{'color': activeGame.timer <= 5  ? 'red' : null}"
+          >{{convertTime(activeGame.timer)}}</span
+        >
+        <span>time left {{infoMessage}} </span>
+      </div>
+      <span v-if="activeGame.msg">{{ activeGame.msg }}</span>
+      <input
+        v-if="activeGame.moveMade > 0"
+        type="button"
+        id="btn"
+        value="Restart"
+        @click="restart"
+      />
+      <input
+        v-if="activeGame.moveMade > 0"
+        type="button"
+        id="btn"
+        :value="!activeGame.hideTimer ? 'Hide timer' : 'show timer'"
+        @click="hideTimer"
+      />
+      <input
+        type="button"
+        id="btn"
+        value="Help"
+        @click="help"
+      />
+      <div>
+        <span v-if="activeGame.whiteLength">White: {{activeGame.whiteLength}}</span>
+        <span v-if="activeGame.blackLength">Black: {{activeGame.blackLength}}</span>
+      </div>
+    </div>
+    <script type="text/javascript">
+      let activeGame = new Game();
+      activeGame.img_b.src = "imgs/b.png";
+      activeGame.img_w.src = "imgs/w.png";
+      activeGame.canvas.onclick = function(e) {
+        activeGame.makeMove(e);
+      };
+
+      new Vue({
+        el: "#box",
+        data: {
+          activeGame,
+          whValue: ""
+        },
+        created() {
+          activeGame.drawLine();
+        },
+        methods: {
+          restart() {
+            activeGame.restart();
+          },
+          hideTimer(){
+            activeGame.hideTimer = !activeGame.hideTimer;
+          },
+          help(){
+            alert('Select the square you want to put your chess into by clicking them.  You cannot occupy a square that is already occupied. The first player to get five squares in a row wins.');
+          },
+          convertTime(para) {
+            var h, r, clock;
+            if (para >= 3600) {
+              h = Math.floor(para / 3600);
+              r = para % 3600;
+              m = Math.floor(r / 60);
+              s = r % 60;
+              h = h < 10 ? "0" + h : h;
+              m = m < 10 ? "0" + m : m;
+              s = s < 10 ? "0" + s : s;
+              clock = h + ":" + m + ":" + s;
+              return clock;
+            } else {
+              m = Math.floor(para / 60);
+              s = para % 60;
+              m = m < 10 ? "0" + m : m;
+              s = s < 10 ? "0" + s : s;
+              clock = m + ":" + s;
+              return clock;
+            }
+          }
+        },
+        computed: {
+          infoMessage() {
+            if (!this.activeGame.isWin) {
+              return `for player ${this.activeGame.currentTurn}`;
+            }
+            return "";
+          },
+        }
+      });
+    </script>
+  </body>
+</html>
